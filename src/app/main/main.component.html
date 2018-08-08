@@ -1,4 +1,12 @@
-<p>
-  main works!
-</p>
+<div class="mainheader">
+    <div class="col-md-6 offset-md-3"> 
+            <a class="nav-link btn btn-primary d-inline-block" [routerLink]="[isEdit ? '' : 'edit']">
+                        {{ isEdit ? 'Posts' : 'Compose' }}
+            </a>
+            <a class="nav-link btn btn-secondary d-inline-block float-right " [routerLink]="['/login']">
+                        Sign Up 
+            </a>
+    </div>
+</div>
+
 <router-outlet></router-outlet>
