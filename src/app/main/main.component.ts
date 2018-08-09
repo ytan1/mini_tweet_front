@@ -26,7 +26,8 @@ export class MainComponent implements OnInit {
                       // Hide loading indicator
                       // Present error to user
                       console.log(event.error);
-                  })
+                  } 
+                });
   }
 
   ngOnInit() {

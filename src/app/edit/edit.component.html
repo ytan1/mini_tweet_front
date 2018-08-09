@@ -1,3 +1,22 @@
-<p>
-  edit works!
-</p>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card bg-faded">
+                <div class="card-header">Add some photos you wanna share!</div>        
+                <div class="card-body">
+                    <label for="exampleFormControlTextarea1">Contents (&lt;200)</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+                <div class="card-footer">
+                    <ul class="imgList">
+                        <li ><img src="http://source.ytan1mall.com/resourse/floor1-3.jpg" alt="..." class="img-thumbnail"></li>
+                        <li ><img src="http://source.ytan1mall.com/resourse/floor1-3.jpg" alt="..." class="img-thumbnail"></li>
+                        <a id="upload" class="nav-link btn btn-primary d-inline-block" (click)="addFile()">Upload</a>
+                    </ul>
+                    <input type="file" #file style="display: none;" (change)="checkUploadFile()" />
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
