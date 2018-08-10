@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 @Injectable({
@@ -8,14 +8,15 @@ import { Observable } from 'rxjs/Observable';
 export class UploadService {
 
   constructor(private httpClient: HttpClient) { }
-
-  private url:string = 'localhost:8000'
+  //api url
+  private url:string = 'http://localhost:8000/api/file';
+  //upload pic
   public upload(files: Set<File>): {[key:string]: Object} {
 
       const status = {};
       files.forEach(file => {
           let fd = new FormData();
-          fd.append('file', file, file.name);
+          fd.append('file', file);   //laravel: $request->file('file')
           const req = new HttpRequest('POST', this.url, fd, {reportProgress: true});
 
            const progress = new Subject<number>();
@@ -35,10 +36,12 @@ export class UploadService {
                            reject(event.body)
                        }
                        
+                   }else if(event instanceof HttpErrorResponse){
+                     reject(event.error.error)
                    }
                });
            })
-           
+           status[file.name] = {};
            status[file.name]['response'] = promise;
            status[file.name]['progess'] = progress.asObservable();
            
@@ -46,5 +49,10 @@ export class UploadService {
 
       }) 
       return status;
+  }
+  //delete pic
+  delete(uri:string): Observable<any>{
+    const req = new HttpRequest('DELETE', this.url, {params: `path=${uri}`});
+    return this.httpClient.request(req);
   }
 }

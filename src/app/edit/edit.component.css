@@ -3,6 +3,7 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    height: 60px;
 }
 .imgList::after{
     content: '';
@@ -15,10 +16,26 @@
     margin: 5px;
     height: 50px;
     width: auto;
+    position: relative;
 }
 .img-thumbnail{
     height: 100%;
     width: auto;
+}
+.imgList li:hover::before{
+    font-family: FontAwesome;
+    font-style: normal;
+    content: "\f00d";
+    font-size: 40px;
+    line-height: 50px;
+    text-align: center;
+    background: #eee;
+    opacity: 0.5;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 10;
+    cursor: pointer;
 }
 #upload{
     position: absolute;
@@ -26,4 +43,8 @@
     top: 50%;
     margin-top: -21px;
     color: white;
+}
+#send{
+    margin: 20px 5px 0;
+    color: #fff;
 }

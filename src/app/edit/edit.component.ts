@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {UploadService} from '../upload.service';
+import {ArticleService} from '../article.service';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
@@ -8,27 +10,55 @@ import {UploadService} from '../upload.service';
 export class EditComponent implements OnInit {
 
   @ViewChild('file') fileInput;
+  @ViewChild('content') contentInput;
   private uploading: boolean = false;
-  private url:string[] = [];
-  private hostname:string = 'localhost:'
+  private uris:string = '';
+  private urlArr:string[] = [];
+  private uriArr:string[] = [];
+  private hostname:string = 'http://localhost:8000/storage/';
+  // private example:string = 'http://source.ytan1mall.com/resourse/floor1-3.jpg';
   // private promises: Set<Promise<any>>;
-  constructor(private uploadService: UploadService) { }
+  constructor(private uploadService: UploadService, private articleService: ArticleService, private _sanitizer: DomSanitizer) { }
 
   ngOnInit() {
   }
 
   addFile(){
-      this.fileInput.nativeElement.click();
+    if(this.urlArr.length >= 5){
+        alert('5 pics for max');
+        return;
+    }else if(this.uploading){
+      alert('Is uploading...');
+      return;
+    }
+    else{
+        this.fileInput.nativeElement.click();
+    }
+      
   }
   checkUploadFile(){
-      if(this.url.length >= 5){
+      if(this.urlArr.length >= 5){
           alert('5 pics for max');
-      }else{
+          return;
+      }else if(this.uploading){
+        alert('Is uploading...');
+        return;
+      }
+      else{
           this.uploadFile();
       }
   }
   uploadFile(){
-        const responses = this.uploadService.upload(this.fileInput.nativeElement.files);
+        const originFiles = this.fileInput.nativeElement.files;
+
+        let files:Set<File> = new Set();
+        for(let key in originFiles){
+          if(originFiles.hasOwnProperty(key)){
+            files.add(originFiles[key]);
+          }
+        }
+
+        const responses = this.uploadService.upload(files);
         this.uploading = true;
         let promises = [];
 
@@ -40,13 +70,48 @@ export class EditComponent implements OnInit {
             this.uploading = false;
 
             res.forEach(body => {
-                this.url.push(this.hostname + body.uri);
-            },
+              this.urlArr.push(this.hostname + body.uri);
+              this.uriArr.push(body.uri);
+              this.joinUris();
+            })},
             err => {
+                this.uploading = false;
                console.log(`error uploading, ${err}`);
             });
+  }
+  joinUris(){
+    this.uris = this.uriArr.join(',');
+  }
+  deleteFile(url:string){
+    const index = this.urlArr.indexOf(url);
+    this.uploadService.delete(this.uriArr[index]).subscribe(_ => {
+      //delete the url in the url Arr
+      this.urlArr.splice(index, 1);
+      this.uriArr.splice(index, 1);
+      this.joinUris();
 
-        })
+    },
+      err => {console.log(err)}
+    )
+  }
 
+  createArticle(){
+    const content = this.contentInput.nativeElement.value;
+    this.articleService.create(content, this.uris).then(res => {
+      console.log(res);
+    }, err => {
+      console.log(err)
+;    });
+
+  }
+
+
+
+
+
+  //unsafe url convert
+  getBackground(image) {
+    let sanitizedUrl = this._sanitizer.bypassSecurityTrustResourceUrl(image);
+    return sanitizedUrl;
   }
 }
