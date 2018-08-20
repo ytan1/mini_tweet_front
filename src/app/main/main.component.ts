@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, Event, NavigationStart, NavigationEnd, NavigationError } from '@angular/router';
+import {AuthService} from '../auth.service';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -8,8 +9,11 @@ import { Router, Event, NavigationStart, NavigationEnd, NavigationError } from '
 export class MainComponent implements OnInit {
 
   private isEdit: boolean = false;
+  private isLogin: boolean = false;
 
-  constructor(router: Router) { 
+  constructor(private router: Router,
+              private auth: AuthService
+    ) { 
       // this.isEdit = router.url.indexOf('/dashboard/edit') > -1;
       router.events.subscribe( (event: Event) => {
 
@@ -31,6 +35,15 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.auth.status.subscribe(
+        data => this.isLogin = data,
+        error => console.log(`error from main.component: ${error}`)
+      )
+  }
+
+  logout(){
+    this.auth.logout()
+    this.auth.changeStatus()
   }
 
 }

@@ -3,7 +3,8 @@
             <a class="nav-link btn btn-primary d-inline-block" [routerLink]="[isEdit ? '' : 'edit']">
                         {{ isEdit ? 'Posts' : 'Compose' }}
             </a>
-            <a class="nav-link btn btn-secondary d-inline-block float-right " [routerLink]="['/login']">
+            <a *ngIf="isLogin" class="nav-link btn btn-secondary d-inline-block float-right text-light" (click)="logout()">Log Out</a>
+            <a *ngIf="!isLogin" class="nav-link btn btn-secondary d-inline-block float-right " [routerLink]="['/auth']">
                         Sign Up 
             </a>
     </div>

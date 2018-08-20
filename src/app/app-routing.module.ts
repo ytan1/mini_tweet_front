@@ -14,7 +14,8 @@ const routes: Routes = [
             { path: '**', redirectTo: ''}
         ]
     },
-    { path: 'login', component: LoginComponent }
+    { path: 'auth', component: LoginComponent },
+    {path: '**', redirectTo: 'dashboard'}
 ];
 @NgModule({
   imports:[

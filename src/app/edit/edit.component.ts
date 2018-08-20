@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+
 import {UploadService} from '../upload.service';
 import {ArticleService} from '../article.service';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
@@ -18,7 +20,7 @@ export class EditComponent implements OnInit {
   private hostname:string = 'http://localhost:8000/storage/';
   // private example:string = 'http://source.ytan1mall.com/resourse/floor1-3.jpg';
   // private promises: Set<Promise<any>>;
-  constructor(private uploadService: UploadService, private articleService: ArticleService, private _sanitizer: DomSanitizer) { }
+  constructor(private uploadService: UploadService, private articleService: ArticleService, private router:Router, private _sanitizer: DomSanitizer) { }
 
   ngOnInit() {
   }
@@ -98,10 +100,12 @@ export class EditComponent implements OnInit {
   createArticle(){
     const content = this.contentInput.nativeElement.value;
     this.articleService.create(content, this.uris).then(res => {
-      console.log(res);
+      //create article success
+      this.router.navigateByUrl('/dashboard');
     }, err => {
-      console.log(err)
-;    });
+      console.log(err);
+      this.router.navigateByUrl('/dashboard');
+    });
 
   }
 

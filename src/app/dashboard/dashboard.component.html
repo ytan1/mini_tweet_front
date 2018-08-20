@@ -1,13 +1,19 @@
 <div class="">
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <div class="card bg-faded">
-                <div class="card-header"><strong>Anonynous</strong> said <div class="d-inline-block float-right">5:00:00 Mar 4, 2018</div></div>        
+            
+
+            <div class="card bg-faded" *ngFor="let c of articles">
+                <div class="card-header"><strong>{{c.user_name}}</strong> said <div class="d-inline-block float-right">{{c.created_at}}</div></div>        
                 <div class="card-body">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate. Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan. Aliquam in felis sit amet augue.
+                    {{c.content}}
                 </div>
-                <div class="card-footer">
-                    <i class="far fa-thumbs-up"></i>&nbsp;&nbsp;<span>0</span>&nbsp;&nbsp;|&nbsp;&nbsp;<i class="far fa-thumbs-down"></i>&nbsp;&nbsp;<span>0</span>
+                <div class="card-footer" *ngIf="c.uriArr.length != 0">
+                    <ul class="imgList" >
+                        <li *ngFor="let uri of c.uriArr"><img [src]="getBackground(uri)" alt="..." class="img-thumbnail"></li></ul>
+                </div>
+                <div class="card-footer real-footer">
+                    <fa-icon [icon]="faThumbsUp"></fa-icon>&nbsp;&nbsp;<span>0</span>&nbsp;&nbsp;|&nbsp;&nbsp;<fa-icon [icon]="faThumbsDown"></fa-icon>&nbsp;&nbsp;<span>0</span>
                 </div>
             </div>
             

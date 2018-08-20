@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import {TokenService} from './token.service';
 @Injectable({
   providedIn: 'root'
 })
 export class UploadService {
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient,
+              private token: TokenService
+    ) { }
   //api url
   private url:string = 'http://localhost:8000/api/file';
   //upload pic
@@ -17,7 +20,14 @@ export class UploadService {
       files.forEach(file => {
           let fd = new FormData();
           fd.append('file', file);   //laravel: $request->file('file')
-          const req = new HttpRequest('POST', this.url, fd, {reportProgress: true});
+          //create headers for jwt authentication
+          const token = this.token.get();
+          let header:HttpHeaders = new HttpHeaders({
+                'Authorization': `Bearer ${token}`
+            });
+          
+          //headerName.append('Authorization', `Bearer ${token}`); cannot append because header is immutable?
+          const req = new HttpRequest('POST', this.url, fd, {headers: header, reportProgress: true });
 
            const progress = new Subject<number>();
            const promise = new Promise((resolve, reject) => {

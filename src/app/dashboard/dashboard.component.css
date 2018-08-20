@@ -1,0 +1,26 @@
+.imgList{
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 110px;
+}
+.imgList::after{
+    content: '';
+    clear: both;
+    height: 0;
+    display: block;
+}
+.imgList li{
+    float: left;
+    margin: 5px;
+    height: 100px;
+    width: auto;
+}
+.img-thumbnail{
+    height: 100%;
+    width: auto;
+}
+.card{
+    margin-bottom: 10px;
+}
